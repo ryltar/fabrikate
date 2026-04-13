@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fabricate — Developer Guide</title>
+    <link rel="icon" href="./fabricate-favicon.svg" type="image/svg+xml" />
+    <style>
+      :root {
+        --ink: #132645;
+        --muted: #446286;
+        --line: rgba(19, 38, 69, 0.14);
+        --card: rgba(255, 255, 255, 0.82);
+        --a: #1478ff;
+        --b: #00c8a6;
+        --c: #ff9966;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Sora", "Avenir Next", "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 0% 10%, rgba(20, 120, 255, 0.22), transparent 40%),
+          radial-gradient(circle at 100% 20%, rgba(0, 200, 166, 0.2), transparent 40%),
+          linear-gradient(140deg, #f3f8ff, #fff6ef);
+        min-height: 100vh;
+        padding: 0;
+      }
+      .nav-header {
+        border-bottom: 1px solid var(--line);
+        background: white;
+        padding: 16px 18px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .nav-header nav {
+        max-width: 1040px;
+        margin: 0 auto;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+      .nav-header a {
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+      .nav-header a:hover {
+        background: rgba(20, 120, 255, 0.1);
+        color: var(--a);
+      }
+      .nav-header a.active {
+        background: rgba(20, 120, 255, 0.15);
+        color: var(--a);
+      }
+      .shell {
+        max-width: 1040px;
+        margin: 0 auto;
+        display: grid;
+        gap: 18px;
+        padding: 28px 18px 56px;
+      }
+      .hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 24px;
+        border: 1px solid var(--line);
+        background: var(--card);
+        box-shadow: 0 22px 52px rgba(11, 38, 77, 0.16);
+        padding: 24px;
+      }
+      .hero::before,
+      .hero::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(30px);
+        opacity: 0.36;
+        pointer-events: none;
+      }
+      .hero::before {
+        width: 280px;
+        height: 280px;
+        right: -90px;
+        top: -80px;
+        background: var(--a);
+        animation: floatA 10s ease-in-out infinite;
+      }
+      .hero::after {
+        width: 300px;
+        height: 300px;
+        left: -90px;
+        bottom: -120px;
+        background: var(--c);
+        animation: floatB 13s ease-in-out infinite;
+      }
+      .hero h1 {
+        margin: 0;
+        font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+        letter-spacing: -0.03em;
+        position: relative;
+        z-index: 1;
+      }
+      .hero p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        max-width: 760px;
+        position: relative;
+        z-index: 1;
+      }
+      section {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--card);
+        padding: 14px;
+        box-shadow: 0 10px 24px rgba(17, 45, 84, 0.1);
+        animation: slideUp 500ms ease both;
+      }
+      section h2 {
+        margin: 0 0 8px;
+        font-size: 1.1rem;
+      }
+      section p {
+        margin: 0 0 12px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+      section p:last-child {
+        margin-bottom: 0;
+      }
+      @keyframes slideUp {
+        from { transform: translateY(8px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes floatA {
+        0%,100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(10px) translateX(-8px); }
+      }
+      @keyframes floatB {
+        0%,100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(-12px) translateX(12px); }
+      }
+      .code-block {
+        border: 1px solid rgba(20, 120, 255, 0.18);
+        border-radius: 12px;
+        background: linear-gradient(140deg, rgba(20, 120, 255, 0.06), rgba(0, 200, 166, 0.06));
+        padding: 14px;
+        margin: 14px 0 8px 0;
+        font-family: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
+        font-size: 0.8rem;
+        line-height: 1.6;
+        overflow-x: auto;
+        white-space: pre;
+      }
+      .keyword { color: #1478ff; font-weight: 600; }
+      .string { color: #00c8a6; }
+      .comment { color: #446286; font-style: italic; }
+      .function { color: #ff9966; }
+      .property { color: #1478ff; }
+      .value { color: #ff9966; }
+    </style>
+  </head>
+  <body>
+    <header class="nav-header">
+      <nav>
+        <a href="./index.html">Home</a>
+        <a href="./developer-guide.html" class="active">Developer Guide</a>
+        <a href="./po-qa-guide.html">Studio Guide</a>
+      </nav>
+    </header>
+    <main class="shell">
+      <section class="hero">
+        <h1>Fabricate Developer Guide</h1>
+        <p>Learn how to implement Fabricate in your code: integrate the client, create stubs, build test scenarios, and configure field generation for localStorage-backed testing.</p>
+      </section>
+
+      <section>
+        <h2>Quick start</h2>
+        <p><strong>Create a typed client</strong></p>
+        <div class="code-block"><span class="keyword">import</span> { createFetchClient } <span class="keyword">from</span> <span class="string">"fabricate"</span>;
+
+<span class="keyword">type</span> <span class="property">User</span> = {
+  id: <span class="keyword">number</span>;
+  name: <span class="keyword">string</span>;
+  role: <span class="string">"admin"</span> | <span class="string">"user"</span>;
+};
+
+<span class="keyword">const</span> <span class="property">client</span> = <span class="function">createFetchClient</span>({
+  baseUrl: <span class="string">"https://api.example.com"</span>,
+  headers: {
+    Authorization: <span class="string">"Bearer token"</span>,
+  },
+});</div>
+
+        <p><strong>Call the API</strong></p>
+        <div class="code-block"><span class="keyword">const</span> <span class="property">user</span> = <span class="keyword">await</span> <span class="property">client</span>.<span class="function">get</span>&lt;<span class="property">User</span>&gt;(<span class="string">"/users/123"</span>);
+
+<span class="keyword">const</span> <span class="property">newUser</span> = <span class="keyword">await</span> <span class="property">client</span>.<span class="function">post</span>&lt;<span class="property">User</span>&gt;(<span class="string">"/users"</span>, {
+  name: <span class="string">"Alice"</span>,
+  role: <span class="string">"user"</span>,
+});</div>
+
+        <p><strong>Enable stub mode</strong></p>
+        <div class="code-block"><span class="keyword">const</span> <span class="property">client</span> = <span class="function">createFetchClient</span>({
+  baseUrl: <span class="string">"https://api.example.com"</span>,
+  stub: <span class="keyword">true</span>,    <span class="comment">// Enable stub mode</span>
+  devMode: <span class="keyword">true</span>,   <span class="comment">// Enable UI and manager</span>
+});</div>
+      </section>
+
+      <section>
+        <h2>Using Fabricate Studio</h2>
+        <p><strong>Mount the UI</strong></p>
+        <div class="code-block"><span class="keyword">import</span> { createFetchClient, mountStubStudioDrawer } <span class="keyword">from</span> <span class="string">"fabricate"</span>;
+
+<span class="keyword">const</span> <span class="property">api</span> = <span class="function">createFetchClient</span>({
+  stub: <span class="keyword">true</span>,
+  devMode: <span class="keyword">true</span>,
+});
+
+<span class="function">mountStubStudioDrawer</span>(<span class="property">api</span>, {
+  launcherLabel: <span class="string">"Stub Panel"</span>,
+  position: <span class="string">"bottom-right"</span>,
+  initiallyOpen: <span class="keyword">false</span>,
+  widthPx: <span class="value">600</span>,
+});</div>
+
+        <p><strong>View storage</strong></p>
+        <div class="code-block"><span class="comment">// In Fabricate Studio Storage tab:</span>
+localStorage: {
+  <span class="string">"fabricate:collection:/users"</span>: [
+    { <span class="string">"id"</span>: <span class="string">"u-1"</span>, <span class="string">"name"</span>: <span class="string">"Ada"</span>, <span class="string">"role"</span>: <span class="string">"admin"</span> },
+    { <span class="string">"id"</span>: <span class="string">"u-2"</span>, <span class="string">"name"</span>: <span class="string">"Grace"</span>, <span class="string">"role"</span>: <span class="string">"user"</span> },
+  ],
+  <span class="string">"fabricate:resource:/profile"</span>: {
+    <span class="string">"id"</span>: <span class="string">"me"</span>,
+    <span class="string">"firstName"</span>: <span class="string">"John"</span>,
+    <span class="string">"role"</span>: <span class="string">"admin"</span>,
+  },
+}</div>
+
+        <p><strong>Manage field mappings</strong></p>
+        <div class="code-block"><span class="comment">// In Fabricate Studio Mappings tab:</span>
+JSON config: {
+  <span class="string">"/users"</span>: {
+    <span class="string">"age"</span>: { <span class="string">"type"</span>: <span class="string">"number.int"</span>, <span class="string">"min"</span>: <span class="value">18</span>, <span class="string">"max"</span>: <span class="value">65</span> },
+    <span class="string">"displayName"</span>: { <span class="string">"type"</span>: <span class="string">"person.fullName"</span> },
+    <span class="string">"createdAt"</span>: { <span class="string">"type"</span>: <span class="string">"date.recent"</span>, <span class="string">"days"</span>: <span class="value">10</span> },
+  },
+}
+
+<span class="comment">// When you POST /users, fields auto-generate</span>
+<span class="keyword">const</span> <span class="property">newUser</span> = <span class="keyword">await</span> <span class="property">api</span>.<span class="function">post</span>(<span class="string">"/users"</span>, { name: <span class="string">"Bob"</span> });
+<span class="comment">// Result: { name: "Bob", age: 42, displayName: "John Doe", ... }</span></div>
+
+        <p><strong>Run scenarios</strong></p>
+        <div class="code-block"><span class="comment">// Scenarios are buttons in Fabricate Studio</span>
+<span class="comment">// Click to instantly populate localStorage or reset state</span>
+<span class="keyword">const</span> <span class="property">api</span> = <span class="function">createFetchClient</span>({
+  stub: <span class="keyword">true</span>,
+  devMode: <span class="keyword">true</span>,
+  stubScenarioPresets: <span class="function">createScenarios</span>(),
+});</div>
+      </section>
+
+      <section>
+        <h2>Stubbing in code with Fabricate Core</h2>
+        <p><strong>Set up test data</strong></p>
+        <div class="code-block"><span class="keyword">const</span> <span class="property">prefix</span> = <span class="property">api</span>.<span class="property">stubManager</span>.<span class="function">getStoragePrefix</span>();
+
+<span class="comment">// Store collection data</span>
+<span class="property">api</span>.<span class="property">stubManager</span>.<span class="function">setStorageValue</span>(
+  <span class="string">`${prefix}:collection:/users`</span>,
+  [
+    {
+      id: <span class="string">"u-1"</span>,
+      name: <span class="string">"Ada"</span>,
+      role: <span class="string">"admin"</span>,
+    },
+    {
+      id: <span class="string">"u-2"</span>,
+      name: <span class="string">"Grace"</span>,
+      role: <span class="string">"user"</span>,
+    },
+  ]
+);
+
+<span class="comment">// Store resource data</span>
+<span class="property">api</span>.<span class="property">stubManager</span>.<span class="function">setStorageValue</span>(
+  <span class="string">`${prefix}:resource:/profile`</span>,
+  {
+    id: <span class="string">"me"</span>,
+    firstName: <span class="string">"John"</span>,
+    role: <span class="string">"admin"</span>,
+  }
+);</div>
+
+        <p><strong>Define scenarios</strong></p>
+        <div class="code-block"><span class="comment">// example/src/scenarios.js</span>
+<span class="keyword">export</span> <span class="keyword">function</span> <span class="function">createScenarios</span>() {
+  <span class="keyword">return</span> {
+    happyPath: {
+      label: <span class="string">"Happy Path Demo"</span>,
+      description: <span class="string">"Load realistic test data"</span>,
+      <span class="function">execute</span>(<span class="property">manager</span>) {
+        <span class="property">manager</span>.<span class="function">clearStorage</span>();
+        <span class="keyword">const</span> <span class="property">prefix</span> = <span class="property">manager</span>.<span class="function">getStoragePrefix</span>();
+        <span class="property">manager</span>.<span class="function">setStorageValue</span>(
+          <span class="string">`${prefix}:collection:/users`</span>,
+          [{ id: <span class="string">"u-1"</span>, name: <span class="string">"Ada"</span>, role: <span class="string">"admin"</span> }]
+        );
+      },
+    },
+    emptyState: {
+      label: <span class="string">"Empty State"</span>,
+      description: <span class="string">"Clear all data"</span>,
+      <span class="function">execute</span>(<span class="property">manager</span>) {
+        <span class="property">manager</span>.<span class="function">clearStorage</span>();
+        <span class="property">manager</span>.<span class="function">setPostGeneratedFieldsJson</span>(<span class="keyword">undefined</span>);
+      },
+    },
+  };
+}</div>
+
+        <p><strong>Configure field generation</strong></p>
+        <div class="code-block"><span class="keyword">const</span> <span class="property">api</span> = <span class="function">createFetchClient</span>({
+  stub: <span class="keyword">true</span>,
+  stubPostGeneratedFieldsJson: {
+    <span class="string">"/users"</span>: {
+      age: {
+        type: <span class="string">"number.int"</span>,
+        min: <span class="value">18</span>,
+        max: <span class="value">65</span>,
+        asString: <span class="keyword">true</span>,
+      },
+      displayName: { type: <span class="string">"person.fullName"</span> },
+      createdAt: { type: <span class="string">"date.recent"</span>, days: <span class="value">10</span> },
+      category: {
+        type: <span class="string">"pick"</span>,
+        values: [<span class="string">"admin"</span>, <span class="string">"user"</span>, <span class="string">"guest"</span>],
+      },
+    },
+  },
+});
+
+<span class="comment">// When you POST, fields auto-generate</span>
+<span class="keyword">const</span> <span class="property">newUser</span> = <span class="keyword">await</span> <span class="property">api</span>.<span class="function">post</span>(<span class="string">"/users"</span>, {
+  name: <span class="string">"Bob"</span>,
+});
+<span class="comment">// Result includes: age, displayName, createdAt, category</span></div>
+
+        <p><strong>Clear storage and save state</strong></p>
+        <div class="code-block"><span class="comment">// Save state before testing</span>
+<span class="keyword">const</span> <span class="property">snapshot</span> = <span class="property">api</span>.<span class="property">stubManager</span>.<span class="function">exportStorageSnapshot</span>();
+
+<span class="comment">// ... run your test operations ...</span>
+<span class="keyword">await</span> <span class="property">api</span>.<span class="function">post</span>(<span class="string">"/users"</span>, { name: <span class="string">"Test User"</span> });
+
+<span class="comment">// Clear and restore</span>
+<span class="property">api</span>.<span class="property">stubManager</span>.<span class="function">clearStorage</span>();
+<span class="property">api</span>.<span class="property">stubManager</span>.<span class="function">importStorageSnapshot</span>(<span class="property">snapshot</span>, {
+  clearFirst: <span class="keyword">true</span>,
+});</div>
+      </section>
+
+      <section>
+        <h2>Collection CRUD examples</h2>
+        <div class="code-block"><span class="comment">// GET collection - returns array</span>
+<span class="keyword">const</span> <span class="property">users</span> = <span class="keyword">await</span> <span class="property">api</span>.<span class="function">get</span>&lt;User[]&gt;(<span class="string">"/users"</span>);
+
+<span class="comment">// GET item by id</span>
+<span class="keyword">const</span> <span class="property">user</span> = <span class="keyword">await</span> <span class="property">api</span>.<span class="function">get</span>&lt;User&gt;(<span class="string">"/users/u-1"</span>);
+
+<span class="comment">// POST - creates new item</span>
+<span class="keyword">const</span> <span class="property">newUser</span> = <span class="keyword">await</span> <span class="property">api</span>.<span class="function">post</span>&lt;User&gt;(<span class="string">"/users"</span>, {
+  name: <span class="string">"Bob"</span>,
+  role: <span class="string">"user"</span>,
+});
+
+<span class="comment">// PATCH - updates item</span>
+<span class="keyword">await</span> <span class="property">api</span>.<span class="function">patch</span>&lt;User&gt;(<span class="string">"/users/u-1"</span>, {
+  role: <span class="string">"admin"</span>,
+});
+
+<span class="comment">// DELETE - removes item</span>
+<span class="keyword">await</span> <span class="property">api</span>.<span class="function">delete</span>(<span class="string">"/users/u-1"</span>);</div>
+      </section>
+
+      <section>
+        <h2>Resource examples</h2>
+        <div class="code-block"><span class="comment">// GET resource - returns stored object</span>
+<span class="keyword">const</span> <span class="property">profile</span> = <span class="keyword">await</span> <span class="property">api</span>.<span class="function">get</span>&lt;Profile&gt;(<span class="string">"/profile"</span>);
+
+<span class="comment">// PATCH - merges updates into stored object</span>
+<span class="keyword">const</span> <span class="property">updated</span> = <span class="keyword">await</span> <span class="property">api</span>.<span class="function">patch</span>&lt;Profile&gt;(<span class="string">"/profile"</span>, {
+  firstName: <span class="string">"Jane"</span>,
+});
+
+<span class="comment">// PUT - replaces entire resource</span>
+<span class="keyword">await</span> <span class="property">api</span>.<span class="function">put</span>&lt;Profile&gt;(<span class="string">"/profile"</span>, {
+  id: <span class="string">"me"</span>,
+  firstName: <span class="string">"NextName"</span>,
+  role: <span class="string">"user"</span>,
+});</div>
+      </section>
+    </main>
+  </body>
+</html>

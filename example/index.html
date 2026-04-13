@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fabricate — example app</title>
+    <link rel="icon" href="./fabricate-favicon.svg" type="image/svg+xml" />
+    <style>
+      :root {
+        --bg-a: #f7fbff;
+        --bg-b: #fff6ef;
+        --ink: #10233f;
+        --muted: #4d6484;
+        --card: rgba(255, 255, 255, 0.78);
+        --line: rgba(16, 35, 63, 0.12);
+        --accent: #1572ff;
+        --accent-2: #08c5a0;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 10% 10%, rgba(21, 114, 255, 0.16), transparent 35%),
+          radial-gradient(circle at 90% 20%, rgba(8, 197, 160, 0.2), transparent 40%),
+          linear-gradient(135deg, var(--bg-a), var(--bg-b));
+        padding: 0;
+      }
+      .nav-header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(6px);
+        padding: 16px 18px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .nav-header nav {
+        max-width: 960px;
+        margin: 0 auto;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+      .nav-header a {
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+      .nav-header a:hover {
+        background: rgba(21, 114, 255, 0.1);
+        color: var(--accent);
+      }
+      .nav-header a.active {
+        background: rgba(21, 114, 255, 0.15);
+        color: var(--accent);
+      }
+      .app {
+        max-width: 960px;
+        margin: 0 auto;
+        display: grid;
+        gap: 16px;
+        padding: 28px 18px 48px;
+      }
+      .hero {
+        padding: 20px;
+        border-radius: 20px;
+        border: 1px solid var(--line);
+        background: var(--card);
+        backdrop-filter: blur(6px);
+      }
+      .hero h1 {
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+      .hero p {
+        margin: 8px 0 0;
+        color: var(--muted);
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-weight: 700;
+        cursor: pointer;
+        color: #fff;
+        background: linear-gradient(120deg, var(--accent), #2f92ff);
+      }
+      button.alt {
+        background: linear-gradient(120deg, #0f916e, var(--accent-2));
+      }
+      .panel {
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 14px;
+        padding: 14px;
+      }
+      .panel h2 {
+        margin: 0 0 10px;
+        font-size: 1rem;
+      }
+      pre {
+        margin: 0;
+        max-height: 360px;
+        overflow: auto;
+        border-radius: 10px;
+        background: rgba(15, 31, 58, 0.92);
+        color: #dff2ff;
+        padding: 10px;
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav-header">
+      <nav>
+        <a href="./index.html" class="active">Home</a>
+        <a href="./developer-guide.html">Developer Guide</a>
+        <a href="./po-qa-guide.html">Studio Guide</a>
+      </nav>
+    </header>
+    <main class="app">
+      <section class="hero">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 68" width="320" height="68" role="img" aria-label="Fabricate" style="display:block;margin-bottom:8px">
+          <defs>
+            <linearGradient id="gi" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0a74ff"/>
+              <stop offset="100%" stop-color="#00d9a4"/>
+            </linearGradient>
+            <linearGradient id="gt" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#0a74ff"/>
+              <stop offset="100%" stop-color="#19b7ff"/>
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <g filter="url(#glow)">
+            <rect x="4" y="32" width="34" height="8" rx="2.5" fill="url(#gi)" opacity="0.4"/>
+            <rect x="8" y="21" width="26" height="8" rx="2.5" fill="url(#gi)" opacity="0.7"/>
+            <rect x="12" y="10" width="18" height="8" rx="2.5" fill="url(#gi)"/>
+            <circle cx="21" cy="6" r="4" fill="#00d9a4"/>
+          </g>
+          <text x="52" y="38" font-family="'Space Grotesk','Avenir Next','Segoe UI',sans-serif" font-size="30" font-weight="700" letter-spacing="-0.03em" fill="url(#gt)">Fabricate</text>
+          <text x="53" y="54" font-family="'Space Grotesk','Avenir Next','Segoe UI',sans-serif" font-size="11" font-weight="500" letter-spacing="0.06em" fill="#4d6484">Fabricate your backend. Ship your frontend.</text>
+        </svg>
+      </section>
+
+      <section class="panel">
+        <h2>Demo actions</h2>
+        <div class="actions">
+          <button id="seed">Seed demo users</button>
+          <button id="create" class="alt">POST /users</button>
+          <button id="list">GET /users</button>
+          <button id="profile">GET /profile</button>
+          <button id="clear">Clear all stub keys</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Output</h2>
+        <pre id="output">Ready.</pre>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

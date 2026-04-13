@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Fabricate">
+  <defs>
+    <linearGradient id="favicon-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a74ff"/>
+      <stop offset="100%" stop-color="#00d9a4"/>
+    </linearGradient>
+    <filter id="favicon-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Icon mark: three stacked layers -->
+  <g filter="url(#favicon-glow)">
+    <!-- bottom layer -->
+    <rect x="8" y="40" width="48" height="12" rx="2.5" fill="url(#favicon-grad)" opacity="0.4"/>
+    <!-- mid layer -->
+    <rect x="12" y="28" width="40" height="12" rx="2.5" fill="url(#favicon-grad)" opacity="0.7"/>
+    <!-- top layer -->
+    <rect x="16" y="16" width="32" height="12" rx="2.5" fill="url(#favicon-grad)"/>
+    <!-- connector dot -->
+    <circle cx="32" cy="10" r="4" fill="#00d9a4"/>
+  </g>
+</svg>

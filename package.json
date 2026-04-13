@@ -1,0 +1,40 @@
+{
+  "name": "fabricate",
+  "version": "0.1.0",
+  "description": "Fabricate your backend. Ship your frontend.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "clean": "node --eval \"fs.rmSync('dist', { recursive: true, force: true })\"",
+    "test": "vitest run",
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "fetch",
+    "typescript",
+    "stub",
+    "localstorage"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.4.0"
+  }
+}

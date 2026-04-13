@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fabricate Studio Panel Guide</title>
+    <link rel="icon" href="./fabricate-favicon.svg" type="image/svg+xml" />
+    <style>
+      :root {
+        --ink: #132645;
+        --muted: #446286;
+        --line: rgba(19, 38, 69, 0.14);
+        --card: rgba(255, 255, 255, 0.82);
+        --a: #1478ff;
+        --b: #00c8a6;
+        --c: #ff9966;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Sora", "Avenir Next", "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 0% 10%, rgba(20, 120, 255, 0.22), transparent 40%),
+          radial-gradient(circle at 100% 20%, rgba(0, 200, 166, 0.2), transparent 40%),
+          linear-gradient(140deg, #f3f8ff, #fff6ef);
+        min-height: 100vh;
+        padding: 0;
+      }
+      .nav-header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(6px);
+        padding: 16px 18px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .nav-header nav {
+        max-width: 1040px;
+        margin: 0 auto;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+      .nav-header a {
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+      .nav-header a:hover {
+        background: rgba(20, 120, 255, 0.1);
+        color: var(--a);
+      }
+      .nav-header a.active {
+        background: rgba(20, 120, 255, 0.15);
+        color: var(--a);
+      }
+      .shell {
+        max-width: 1040px;
+        margin: 0 auto;
+        display: grid;
+        gap: 18px;
+        padding: 28px 18px 56px;
+      }
+      .hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 24px;
+        border: 1px solid var(--line);
+        background: var(--card);
+        box-shadow: 0 22px 52px rgba(11, 38, 77, 0.16);
+        padding: 24px;
+      }
+      .hero::before,
+      .hero::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(30px);
+        opacity: 0.36;
+        pointer-events: none;
+      }
+      .hero::before {
+        width: 280px;
+        height: 280px;
+        right: -90px;
+        top: -80px;
+        background: var(--a);
+        animation: floatA 10s ease-in-out infinite;
+      }
+      .hero::after {
+        width: 300px;
+        height: 300px;
+        left: -90px;
+        bottom: -120px;
+        background: var(--c);
+        animation: floatB 13s ease-in-out infinite;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+        letter-spacing: -0.03em;
+      }
+      .subtitle {
+        margin: 10px 0 0;
+        color: var(--muted);
+        max-width: 760px;
+      }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .badge {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(19, 38, 69, 0.08);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--card);
+        padding: 14px;
+        box-shadow: 0 10px 24px rgba(17, 45, 84, 0.1);
+        animation: slideUp 500ms ease both;
+      }
+      .card h2 {
+        margin: 0 0 8px;
+        font-size: 1.02rem;
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+      .steps {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--card);
+        padding: 14px;
+      }
+      .steps h2 { margin: 0 0 8px; }
+      .step {
+        margin: 0;
+        padding: 12px 0;
+        border-top: 1px dashed rgba(19, 38, 69, 0.16);
+      }
+      .step:first-of-type { border-top: 0; }
+      .step strong { display: block; margin-bottom: 6px; }
+      .rule {
+        display: block;
+        border: 1px solid rgba(20, 120, 255, 0.18);
+        border-radius: 12px;
+        background: linear-gradient(140deg, rgba(20, 120, 255, 0.06), rgba(0, 200, 166, 0.06));
+        padding: 12px 14px;
+        font-family: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
+        font-size: 0.75rem;
+        overflow-x: auto;
+        margin-top: 8px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        line-height: 1.6;
+        color: #132645;
+      }
+      .keyword { color: #1478ff; font-weight: 600; }
+      .string { color: #00c8a6; }
+      .comment { color: #446286; font-style: italic; }
+      .function { color: #ff9966; }
+      .property { color: #1478ff; }
+      .value { color: #ff9966; }
+      .footer-link {
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        padding: 9px 12px;
+        border-radius: 999px;
+        color: white;
+        font-weight: 700;
+        background: linear-gradient(120deg, var(--a), var(--b));
+      }
+      @keyframes slideUp {
+        from { transform: translateY(8px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes floatA {
+        0%,100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(10px) translateX(-8px); }
+      }
+      @keyframes floatB {
+        0%,100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(-12px) translateX(12px); }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav-header">
+      <nav>
+        <a href="./index.html">Home</a>
+        <a href="./developer-guide.html">Developer Guide</a>
+        <a href="./po-qa-guide.html" class="active">Studio Guide</a>
+      </nav>
+    </header>
+    <main class="shell">
+      <section class="hero">
+        <h1>Fabricate Studio Panel Guide</h1>
+        <p class="subtitle">
+          Learn how to use the Fabricate Studio panel to manage test data, scenarios, and field generation. This guide is for everyone — PO/QA testing user flows, and developers working offline during development.
+        </p>
+        <div class="badge-row">
+          <span class="badge">No API required</span>
+          <span class="badge">PO friendly</span>
+          <span class="badge">Live mapping</span>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h2>1. Seed scenarios</h2>
+          <p>Use preset buttons first. “Happy path demo” fills users/profile. “Empty state” resets data. “Faker mapping demo” injects dynamic generated fields.</p>
+        </article>
+        <article class="card">
+          <h2>2. Validate screens</h2>
+          <p>Go back to the app and run user journeys. Since storage updates live, UI screens react instantly without redeploying anything.</p>
+        </article>
+        <article class="card">
+          <h2>3. Tune generated data</h2>
+          <p>Use Simple mode for form-based mapping. Switch to Advanced JSON mode only when you need full manual control.</p>
+        </article>
+      </section>
+
+      <section class="steps">
+        <h2>Simple mode vs advanced mode</h2>
+        <p class="step"><strong>Simple mode (recommended for PO/QA)</strong>Add fields with the form builder: choose route, field path, type, and options. No raw JSON needed.</p>
+        <p class="step"><strong>Advanced JSON mode</strong>Use only for power users. You can still edit the complete mapping object manually.</p>
+      </section>
+
+      <section class="steps">
+        <h2>Storage tab</h2>
+        <p class="step"><strong>What it shows</strong>The Storage tab displays all test data currently stored in localStorage. Each key is prefixed with <code>fabricate:</code> and includes the route path.</p>
+        <p class="step"><strong>Collection format</strong>Arrays stored with key pattern: <code>fabricate:collection:/path</code><span class="rule">fabricate:collection:/users = [
+  { <span class="property">id</span>: <span class="string">"u-1"</span>, <span class="property">name</span>: <span class="string">"Ada"</span>, <span class="property">role</span>: <span class="string">"admin"</span> },
+  { <span class="property">id</span>: <span class="string">"u-2"</span>, <span class="property">name</span>: <span class="string">"Grace"</span>, <span class="property">role</span>: <span class="string">"user"</span> }
+]</span></p>
+        <p class="step"><strong>Resource format</strong>Single objects stored with key pattern: <code>fabricate:resource:/path</code><span class="rule">fabricate:resource:/profile = {
+  <span class="property">id</span>: <span class="string">"me"</span>,
+  <span class="property">firstName</span>: <span class="string">"John"</span>,
+  <span class="property">role</span>: <span class="string">"admin"</span>
+}</span></p>
+        <p class="step"><strong>Use during testing</strong>refresh the page and click "Storage" to verify your scenario data persisted. Edit values directly if needed to test edge cases.</p>
+      </section>
+
+      <section class="steps">
+        <h2>What is Faker mapping?</h2>
+        <p class="step"><strong>Core concept</strong>Faker mapping automatically generates realistic test data based on rules you define. When you POST data to an endpoint, the stub engine adds extra fields automatically according to your mapping configuration.</p>
+        <p class="step"><strong>Real world example</strong>You only provide a minimal request payload:<span class="rule"><span class="comment">// Your POST request body</span>
+{
+  <span class="property">"name"</span>: <span class="string">"Alice"</span>
+}</span>Faker mapping intercepts and auto-generates:<span class="rule"><span class="comment">// Response with auto-generated fields</span>
+{
+  <span class="property">"name"</span>: <span class="string">"Alice"</span>,
+  <span class="property">"age"</span>: <span class="value">34</span>,
+  <span class="property">"displayName"</span>: <span class="string">"Alice Johnson"</span>,
+  <span class="property">"role"</span>: <span class="string">"user"</span>,
+  <span class="property">"createdAt"</span>: <span class="string">"2025-10-01"</span>
+}</span></p>
+        <p class="step"><strong>Use case</strong>Test the UI with varied, realistic data without manually crafting each test case. Especially useful for testing forms, lists, and edge cases (boundary ages, special characters, timestamps).</p>
+        <p class="step"><strong>How it works</strong>In the Mappings tab, define rules like:<span class="rule">{
+  <span class="property">"/users"</span>: {
+    <span class="property">"displayName"</span>: { <span class="property">"type"</span>: <span class="string">"person.fullName"</span> },
+    <span class="property">"age"</span>: { <span class="property">"type"</span>: <span class="string">"number.int"</span>, <span class="property">"min"</span>: <span class="value">18</span>, <span class="property">"max"</span>: <span class="value">65</span> }
+  }
+}</span>When a POST happens, these rules auto-generate values for those fields.</p>
+      </section>
+
+      <section class="steps">
+        <h2>Faker mapping examples</h2>
+        <p class="step"><strong>Age between 18 and 30 (string)</strong><span class="rule">{
+  <span class="property">"/users"</span>: {
+    <span class="property">"age"</span>: {
+      <span class="property">"type"</span>: <span class="string">"number.int"</span>,
+      <span class="property">"min"</span>: <span class="value">18</span>,
+      <span class="property">"max"</span>: <span class="value">30</span>,
+      <span class="property">"asString"</span>: <span class="keyword">true</span>
+    }
+  }
+}</span></p>
+        <p class="step"><strong>Random names and category list</strong><span class="rule">{
+  <span class="property">"/users"</span>: {
+    <span class="property">"displayName"</span>: {
+      <span class="property">"type"</span>: <span class="string">"person.fullName"</span>
+    },
+    <span class="property">"category"</span>: {
+      <span class="property">"type"</span>: <span class="string">"pick"</span>,
+      <span class="property">"values"</span>: [<span class="string">"car"</span>, <span class="string">"peter"</span>, <span class="string">"house"</span>]
+    }
+  }
+}</span></p>
+        <p class="step"><strong>Recent timestamp</strong><span class="rule">{
+  <span class="property">"/users"</span>: {
+    <span class="property">"createdAt"</span>: {
+      <span class="property">"type"</span>: <span class="string">"date.recent"</span>,
+      <span class="property">"days"</span>: <span class="value">7</span>
+    }
+  }
+}</span></p>
+      </section>
+
+      <section class="steps">
+        <h2>Nested objects in Simple mode</h2>
+        <p class="step"><strong>How to do it</strong>In field path, use dot notation. Example: <code>profile.firstName</code>, <code>profile.lastName</code>, <code>profile.meta.createdAt</code>.</p>
+        <p class="step"><strong>Form builder inputs</strong><span class="rule">Route: /users
+
+Field path: profile.firstName
+  Type: person.firstName
+
+Field path: profile.lastName
+  Type: person.lastName
+
+Field path: profile.meta.createdAt
+  Type: date.recent
+  Options: days = 7</span></p>
+        <p class="step"><strong>Generated mapping</strong><span class="rule">{
+  <span class="property">"/users"</span>: {
+    <span class="property">"profile"</span>: {
+      <span class="property">"firstName"</span>: {
+        <span class="property">"type"</span>: <span class="string">"person.firstName"</span>
+      },
+      <span class="property">"lastName"</span>: {
+        <span class="property">"type"</span>: <span class="string">"person.lastName"</span>
+      },
+      <span class="property">"meta"</span>: {
+        <span class="property">"createdAt"</span>: {
+          <span class="property">"type"</span>: <span class="string">"date.recent"</span>,
+          <span class="property">"days"</span>: <span class="value">7</span>
+        }
+      }
+    }
+  }
+}</span></p>
+      </section>
+
+      <section class="steps">
+        <h2>Recommended QA workflow</h2>
+        <p class="step"><strong>Step A</strong>Open Stub Panel and click “Happy path demo”.</p>
+        <p class="step"><strong>Step B</strong>Execute main functional flow in the app.</p>
+        <p class="step"><strong>Step C</strong>Switch to “Empty state” and retest empty UX.</p>
+        <p class="step"><strong>Step D</strong>Edit faker mapping, trigger POST flow, verify generated values in UI.</p>
+        <a class="footer-link" href="/" aria-label="Back to example app">Back to example app</a>
+      </section>
+    </main>
+  </body>
+</html>
