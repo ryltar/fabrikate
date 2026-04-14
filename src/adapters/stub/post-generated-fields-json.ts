@@ -24,9 +24,14 @@ export function compilePostGeneratedFieldsJson(
   );
 }
 
-function compileRouteFields(fields: Record<string, StubJsonFieldRule>): StubGeneratedFields {
+function compileRouteFields(
+  fields: Record<string, StubJsonFieldRule>,
+): StubGeneratedFields {
   return Object.fromEntries(
-    Object.entries(fields).map(([field, rule]) => [field, resolveJsonRule(rule)]),
+    Object.entries(fields).map(([field, rule]) => [
+      field,
+      resolveJsonRule(rule),
+    ]),
   );
 }
 
@@ -60,7 +65,9 @@ function resolveJsonRule(rule: StubJsonFieldRule): unknown {
       return faker.person.fullName();
     case "pick": {
       if (!Array.isArray(rule.values) || rule.values.length === 0) {
-        throw new Error("JSON generated field rule 'pick' requires a non-empty values array.");
+        throw new Error(
+          "JSON generated field rule 'pick' requires a non-empty values array.",
+        );
       }
 
       return faker.helpers.arrayElement(rule.values);

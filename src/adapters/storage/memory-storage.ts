@@ -1,6 +1,8 @@
 import type { StorageLike } from "../../types";
 
-export function createMemoryStorage(seed?: Record<string, unknown>): StorageLike {
+export function createMemoryStorage(
+  seed?: Record<string, unknown>,
+): StorageLike {
   const entries = new Map<string, string>();
 
   if (seed) {

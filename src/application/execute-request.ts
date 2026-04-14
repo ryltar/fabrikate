@@ -22,7 +22,9 @@ export async function executeRequest<TResponse = unknown, TBody = unknown>({
   shouldStub: boolean;
   defaultStubStrategy: "auto" | "resource" | "collection";
   stubIdFields?: string[];
-  postGeneratedFields?: Parameters<StubPort["execute"]>[0]["postGeneratedFields"];
+  postGeneratedFields?: Parameters<
+    StubPort["execute"]
+  >[0]["postGeneratedFields"];
   fetchPort?: FetchPort;
   stubPort?: StubPort;
 }): Promise<TResponse> {
