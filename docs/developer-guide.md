@@ -14,8 +14,8 @@ This guide covers how to set up, build, test, and contribute to Fabricate.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-org/fabricate.git
-cd fabricate
+git clone https://github.com/ryltar/fabrikate.git
+cd fabrikate
 ```
 
 2. Install dependencies:
@@ -244,9 +244,10 @@ Release automation is handled by semantic-release with conventional commits. On 
 
 ### Required Repository Settings
 
-1. Add an `NPM_TOKEN` repository secret with an npm automation token that can publish `fabricate`.
-2. In GitHub repository settings, set Pages to use **GitHub Actions** as the source.
-3. Keep merges to `main` using conventional commit messages if you want predictable version bumps.
+1. In npm package settings, configure a **Trusted Publisher** for GitHub Actions with your GitHub owner, repository, and the workflow filename `ci.yml`.
+2. Do not set `NPM_TOKEN` in GitHub for publishing when using trusted publishing. The release job uses GitHub OIDC instead.
+3. In GitHub repository settings, set Pages to use **GitHub Actions** as the source.
+4. Keep merges to `main` using conventional commit messages if you want predictable version bumps.
 
 ## Architecture Overview
 

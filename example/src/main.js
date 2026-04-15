@@ -35,8 +35,8 @@ mountStubStudioDrawer(api, {
   widthPx: 620,
   title: "Recipe Control Panel",
   documentationLinks: [
-    { label: "PO/QA guide", url: "/po-qa-guide.html", target: "_blank" },
-    { label: "Developer guide", url: "/developer-guide.html", target: "_blank" },
+    { label: "PO/QA guide", url: "./po-qa-guide.html", target: "_blank" },
+    { label: "Developer guide", url: "./developer-guide.html", target: "_blank" },
   ],
 });
 
