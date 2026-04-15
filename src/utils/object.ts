@@ -1,7 +1,4 @@
-export function getValueAtPath(
-  value: unknown,
-  path: string,
-): unknown {
+export function getValueAtPath(value: unknown, path: string): unknown {
   if (!path) {
     return value;
   }

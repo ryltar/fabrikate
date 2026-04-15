@@ -3,7 +3,12 @@ import type {
   StubResourceHandlerPort,
   StubRouteResolverPort,
 } from "../ports";
-import type { RequestOptions, StorageLike, StubPostGeneratedFieldsConfig, StubStrategy } from "../types";
+import type {
+  RequestOptions,
+  StorageLike,
+  StubPostGeneratedFieldsConfig,
+  StubStrategy,
+} from "../types";
 
 export async function executeStubRequest<TBody, TResponse>({
   storage,

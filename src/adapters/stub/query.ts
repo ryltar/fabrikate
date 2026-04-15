@@ -54,7 +54,9 @@ function matchesQueryValue(
   queryValue: QueryParamValue | QueryParamValue[],
 ): boolean {
   if (Array.isArray(queryValue)) {
-    return queryValue.some((candidate) => matchesScalarValue(itemValue, candidate));
+    return queryValue.some((candidate) =>
+      matchesScalarValue(itemValue, candidate),
+    );
   }
 
   return matchesScalarValue(itemValue, queryValue);
@@ -80,7 +82,9 @@ function matchesScalarValue(
     return itemValue.toISOString() === normalizeComparableValue(queryValue);
   }
 
-  return normalizeComparableValue(itemValue) === normalizeComparableValue(queryValue);
+  return (
+    normalizeComparableValue(itemValue) === normalizeComparableValue(queryValue)
+  );
 }
 
 function normalizeComparableValue(value: unknown): string {
@@ -107,9 +111,9 @@ function normalizeNumber(value: QueryParamValue): number {
   return Number(value);
 }
 
-function resolveSortDescriptor(query: QueryParams):
-  | { field: string; direction: "asc" | "desc" }
-  | undefined {
+function resolveSortDescriptor(
+  query: QueryParams,
+): { field: string; direction: "asc" | "desc" } | undefined {
   const sort = query.sort;
 
   if (typeof sort === "string" && sort.length > 0) {
@@ -153,7 +157,11 @@ function compareValues(
   const leftComparable = toComparable(left);
   const rightComparable = toComparable(right);
   const result =
-    leftComparable < rightComparable ? -1 : leftComparable > rightComparable ? 1 : 0;
+    leftComparable < rightComparable
+      ? -1
+      : leftComparable > rightComparable
+        ? 1
+        : 0;
 
   return direction === "desc" ? result * -1 : result;
 }

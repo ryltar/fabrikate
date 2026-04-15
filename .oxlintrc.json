@@ -1,0 +1,35 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript"],
+  "rules": {
+    "typescript/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "caughtErrors": "none" }
+    ],
+    "typescript/no-namespace": "off",
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-assertion": "warn"
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.spec.ts",
+        "**/*.spec.tsx",
+        "**/*.steps.ts",
+        "**/src/tests/**",
+        "**/tests/**"
+      ],
+      "rules": {
+        "typescript/no-explicit-any": "off",
+        "typescript/no-non-null-assertion": "off"
+      }
+    },
+    {
+      "files": ["**/tests/**", "**/*.steps.ts", "**/*.steps.js"],
+      "rules": {
+        "no-unused-expressions": "off"
+      }
+    }
+  ],
+  "ignorePatterns": ["node_modules", "dist", "coverage", "tmp"]
+}

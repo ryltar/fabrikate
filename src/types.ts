@@ -16,12 +16,13 @@ export type QueryParamValue =
   | undefined
   | Date;
 
-export type QueryParams = Record<
-  string,
-  QueryParamValue | QueryParamValue[]
->;
+export type QueryParams = Record<string, QueryParamValue | QueryParamValue[]>;
 
 export type StubStrategy = "auto" | "resource" | "collection";
+
+export type StubDataFactory<TResponse> = () => TResponse;
+
+export type StubDataInput<TResponse> = TResponse | StubDataFactory<TResponse>;
 
 export interface StorageLike {
   getItem(key: string): string | null;
@@ -74,7 +75,9 @@ export interface StubManager {
   setStorageValue(key: string, value: unknown): void;
   removeStorageKey(key: string): void;
   clearStorage(options?: StubStorageQueryOptions): void;
-  exportStorageSnapshot(options?: StubStorageQueryOptions): Record<string, unknown>;
+  exportStorageSnapshot(
+    options?: StubStorageQueryOptions,
+  ): Record<string, unknown>;
   importStorageSnapshot(
     snapshot: Record<string, unknown>,
     options?: StubImportOptions,
@@ -104,6 +107,7 @@ export interface StubContext<TBody, TResponse> {
   url: string;
   method: string;
   body: TBody | undefined;
+  stubData?: StubDataInput<TResponse>;
   headers: Headers;
   query?: QueryParams;
   existingData: TResponse | null;
@@ -203,13 +207,16 @@ export type StubPostGeneratedFieldsJsonInput =
   | StubPostGeneratedFieldsJsonConfig
   | (() => StubPostGeneratedFieldsJsonConfig);
 
-export interface RequestOptions<TBody = unknown, TResponse = unknown>
-  extends Omit<RequestInit, "body" | "headers" | "method"> {
+export interface RequestOptions<
+  TBody = unknown,
+  TResponse = unknown,
+> extends Omit<RequestInit, "body" | "headers" | "method"> {
   path: string;
   method?: string;
   headers?: HeadersInit;
   query?: QueryParams;
   body?: TBody;
+  stubData?: StubDataInput<TResponse>;
   stub?: boolean;
   stubKey?: string;
   stubStrategy?: StubStrategy;

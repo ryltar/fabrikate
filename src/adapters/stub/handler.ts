@@ -2,6 +2,7 @@ import type {
   RequestOptions,
   StorageLike,
   StubGeneratedFields,
+  StubDataFactory,
   StubPostGeneratedFieldsConfig,
   StubContext,
   StubRouteDescriptor,
@@ -92,11 +93,7 @@ export function handleCollectionStubRequest<TBody, TResponse>({
         ? readOrCreateCollectionItem(store, context)
         : readOrCreateCollection(store, context);
     case "POST":
-      return createCollectionValue(
-        store,
-        context,
-        postGeneratedFields,
-      );
+      return createCollectionValue(store, context, postGeneratedFields);
     case "PUT":
       return route.isItem
         ? replaceCollectionItem(store, context)
@@ -137,6 +134,7 @@ function createStubContext<TBody, TResponse>({
     url: route.path,
     method,
     body: options.body,
+    stubData: options.stubData,
     headers,
     query: options.query,
     existingData,
@@ -150,6 +148,12 @@ function readOrCreateStubValue<TBody, TResponse>(
 ): TResponse {
   if (context.existingData !== null) {
     return context.existingData;
+  }
+
+  const seededValue = resolveStubData(context.stubData);
+  if (seededValue !== undefined) {
+    writeStorageValue(context.storage, context.route.resourceKey, seededValue);
+    return seededValue;
   }
 
   if (context.body !== undefined) {
@@ -182,7 +186,10 @@ function createResourceValue<TBody, TResponse>(
 function replaceResourceValue<TBody, TResponse>(
   context: StubContext<TBody, TResponse>,
 ): TResponse {
-  const nextValue = coerceBodyValue<TBody, TResponse>(context.body, context.method);
+  const nextValue = coerceBodyValue<TBody, TResponse>(
+    context.body,
+    context.method,
+  );
 
   writeStorageValue(context.storage, context.route.resourceKey, nextValue);
   return nextValue;
@@ -191,7 +198,11 @@ function replaceResourceValue<TBody, TResponse>(
 function patchResourceValue<TBody, TResponse>(
   context: StubContext<TBody, TResponse>,
 ): TResponse {
-  const nextValue = mergeStubData(context.existingData, context.body, context.method);
+  const nextValue = mergeStubData(
+    context.existingData,
+    context.body,
+    context.method,
+  );
 
   writeStorageValue(context.storage, context.route.resourceKey, nextValue);
   return nextValue;
@@ -208,6 +219,12 @@ function readOrCreateCollection<TBody, TResponse>(
     ) as TResponse;
   }
 
+  const seededCollection = resolveStubData(context.stubData);
+  if (Array.isArray(seededCollection)) {
+    const createdCollection = store.replaceCollection(seededCollection);
+    return applyCollectionQuery(createdCollection, context.query) as TResponse;
+  }
+
   return applyCollectionQuery([], context.query) as TResponse;
 }
 
@@ -219,9 +236,12 @@ function readOrCreateCollectionItem<TBody, TResponse>(
     return context.existingData;
   }
 
-  throw new Error(
-    `Stub GET ${context.url} item not found in storage.`,
-  );
+  const seededItem = resolveStubData(context.stubData);
+  if (seededItem !== undefined) {
+    return store.upsertItem(seededItem, context.route.itemId);
+  }
+
+  throw new Error(`Stub GET ${context.url} item not found in storage.`);
 }
 
 function createCollectionValue<TBody, TResponse>(
@@ -248,7 +268,10 @@ function replaceCollection<TBody, TResponse>(
   store: StubCollectionStore,
   context: StubContext<TBody, TResponse>,
 ): TResponse {
-  const nextValue = coerceBodyValue<TBody, TResponse>(context.body, context.method);
+  const nextValue = coerceBodyValue<TBody, TResponse>(
+    context.body,
+    context.method,
+  );
 
   if (!Array.isArray(nextValue)) {
     throw new Error(
@@ -263,7 +286,10 @@ function replaceCollectionItem<TBody, TResponse>(
   store: StubCollectionStore,
   context: StubContext<TBody, TResponse>,
 ): TResponse {
-  const nextValue = coerceBodyValue<TBody, TResponse>(context.body, context.method);
+  const nextValue = coerceBodyValue<TBody, TResponse>(
+    context.body,
+    context.method,
+  );
 
   return store.upsertItem(nextValue, context.route.itemId);
 }
@@ -321,6 +347,16 @@ function coerceBodyValue<TBody, TResponse>(
 
 function isMergeableObject(value: unknown): value is Record<string, unknown> {
   return Object.prototype.toString.call(value) === "[object Object]";
+}
+
+function resolveStubData<TResponse>(
+  stubData: StubContext<unknown, TResponse>["stubData"],
+): TResponse | undefined {
+  if (typeof stubData === "function") {
+    return (stubData as StubDataFactory<TResponse>)();
+  }
+
+  return stubData;
 }
 
 function applyPostGeneratedFields<TBody, TResponse>(

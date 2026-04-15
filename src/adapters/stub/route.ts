@@ -24,7 +24,10 @@ export function resolveStubRoute<TBody, TResponse>({
   const strategy = options.stubStrategy ?? defaultStrategy;
   const path = normalizePath(url);
   const segments = path === "/" ? [] : path.split("/").filter(Boolean);
-  const itemId = segments.length >= 2 ? decodeURIComponent(segments.at(-1) ?? "") : undefined;
+  const itemId =
+    segments.length >= 2
+      ? decodeURIComponent(segments.at(-1) ?? "")
+      : undefined;
   const collectionPath =
     segments.length >= 2 ? `/${segments.slice(0, -1).join("/")}` : path;
   const resourceKey = options.stubKey ?? `${storagePrefix}:resource:${url}`;

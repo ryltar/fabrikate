@@ -27,8 +27,9 @@ export function createFetchClient(config: ClientConfig = {}): FetchClient {
   let runtimeStubEnabled = config.stub ?? false;
   let runtimePostGeneratedFields: StubPostGeneratedFieldsInput | undefined =
     config.stubPostGeneratedFields;
-  let runtimePostGeneratedFieldsJson: StubPostGeneratedFieldsJsonInput | undefined =
-    config.stubPostGeneratedFieldsJson;
+  let runtimePostGeneratedFieldsJson:
+    | StubPostGeneratedFieldsJsonInput
+    | undefined = config.stubPostGeneratedFieldsJson;
 
   const fetchPort: FetchPort | undefined = fetchFn
     ? {

@@ -106,7 +106,10 @@ export class StubCollectionStore {
       return item;
     }
 
-    const existingId = getFirstDefinedString(item as CollectionEntity, this.idFields);
+    const existingId = getFirstDefinedString(
+      item as CollectionEntity,
+      this.idFields,
+    );
 
     if (existingId) {
       return item;
@@ -131,7 +134,10 @@ export class StubCollectionStore {
 }
 
 function createGeneratedId(): string {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
     return crypto.randomUUID();
   }
 

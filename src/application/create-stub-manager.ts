@@ -1,5 +1,4 @@
 import type {
-  StubImportOptions,
   StubManager,
   StubPostGeneratedFieldsInput,
   StubPostGeneratedFieldsJsonInput,
@@ -25,8 +24,12 @@ export function createStubManager({
   storagePrefix: string;
   getPostGeneratedFields: () => StubPostGeneratedFieldsInput | undefined;
   setPostGeneratedFields: (config?: StubPostGeneratedFieldsInput) => void;
-  getPostGeneratedFieldsJson: () => StubPostGeneratedFieldsJsonInput | undefined;
-  setPostGeneratedFieldsJson: (config?: StubPostGeneratedFieldsJsonInput) => void;
+  getPostGeneratedFieldsJson: () =>
+    | StubPostGeneratedFieldsJsonInput
+    | undefined;
+  setPostGeneratedFieldsJson: (
+    config?: StubPostGeneratedFieldsJsonInput,
+  ) => void;
   scenarioPresets?: StubScenarioPresets;
 }): StubManager {
   const enabledListeners = new Set<(enabled: boolean) => void>();
@@ -83,7 +86,11 @@ export function createStubManager({
     },
     clearStorage(options) {
       const storage = getStorage();
-      const keys = withPrefixFilter(listStorageKeys(storage), storagePrefix, options);
+      const keys = withPrefixFilter(
+        listStorageKeys(storage),
+        storagePrefix,
+        options,
+      );
       for (const key of keys) {
         storage.removeItem(key);
       }
@@ -91,7 +98,11 @@ export function createStubManager({
     exportStorageSnapshot(options) {
       const storage = getStorage();
       const snapshot: Record<string, unknown> = {};
-      const keys = withPrefixFilter(listStorageKeys(storage), storagePrefix, options);
+      const keys = withPrefixFilter(
+        listStorageKeys(storage),
+        storagePrefix,
+        options,
+      );
 
       for (const key of keys) {
         const raw = storage.getItem(key);
